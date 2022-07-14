@@ -3,6 +3,7 @@
   export let todos = [];
   import Filtered from './filterTodos.svelte';
   import Todo from './Todo.svelte';
+  import MoreActions from './MoreActions.svelte';
 
   $: totalTodos = todos.length
   $: completedTodos = todos.filter(todo => todo.completed).length;
@@ -12,7 +13,7 @@
     if(totalTodos === 0 ){
       newTodoId = 1;
     }else newTodoId = Math.max(...todos.map(todo => todo.id)) + 1;
-  }
+}
 
 
     const removeTodo = (todo) => {
@@ -23,8 +24,7 @@
       if (newTodoName){
         todos = [...todos, { id: newTodoId, name: newTodoName, completed: false}];
         newTodoName = ''
-        console.log(todos)
-      }else alert('write something')
+      }
     }
 
    let filter 
@@ -32,6 +32,16 @@
    filter === 'active' ? todos.filter(todo => !todo.completed ):
    filter === 'completed' ? todos.filter(todo => todo.completed) :
    todos;
+
+   function updateTodo(todo) {
+     const i = todos.findIndex(t => t.id === todo.id)
+     todos[i] = { ...todos[i], ...todo }
+    }
+   
+  const checkAllTodos = (completed) => {todos = todos.map(todo => ({...todo, completed: completed}))}
+
+  const removeCompletedTodos = () => todos = todos.filter(todo => !todo.completed)
+ 
       
 </script>
 
@@ -40,7 +50,7 @@
       <h2 class="create-label">
           What needs to be done?
       </h2>
-      <input type="text" id="todo-0" autocomplete="off" bind:value={newTodoName} class="create-input"/><br/>
+      <input type="text" id="todo-0" autocomplete="off" bind:value={newTodoName} class="create-input"/>
       <button type="button" on:click={() => addTodo()} class="create-btn">
         Add
       </button>
@@ -48,21 +58,19 @@
 
       <Filtered bind:filter={filter}/> 
 
-      <h2>{completedTodos} out of {totalTodos} items completed</h2>
+      <h2>{completedTodos} out of {totalTodos} tasks completed</h2>
       <div class="todo-list">
           {#each filterTodos(filter, todos) as todo (todo.id)}
-              <Todo {todo} on:delete={e => removeTodo(e.detail)}/>
+              <Todo {todo} on:delete={e => removeTodo(e.detail)}
+                on:update={e => updateTodo(e.detail)}
+                />
               {:else}
               <p>Nothing to do</p>
           {/each}
       </div>
 
       <hr />
-    
-    <div class="btn-group">
-      <button type="button" class="btn btn__primary">Check all</button>
-      <button type="button" class="btn btn__primary">Remove completed</button>
-    </div>
+      <MoreActions {todos} on:removeCompleted={removeCompletedTodos} on:checkAll={e => checkAllTodos(e.detail)}/>    
     
   </main>
 
@@ -150,17 +158,10 @@
         font-weight: bold;
     }
     /* end */
-
-    /* style for each todo */
-    
-    .btn-group{
-        display: flex;
-        justify-content: center;
-        gap: 1em;
-        margin-top: 2em;
+    .error-message {
+      font-size: 10px;
+      color: red;
     }
-    .btn-group > button {
-        padding: 0.5em;
-        border-radius: 1em;
-  }
+    
+    
 </style>

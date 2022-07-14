@@ -5,12 +5,10 @@
 
   let editing = false;
   let name = todo.name;
-  console.log(name)
 
   function update(updatedTodo) {
     todo = {...todo, ...updatedTodo}
     dispatch('update', todo)
-    console.log(todo)
   }
   function onSave(){
     update({name: name});

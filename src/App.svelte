@@ -1,10 +1,6 @@
 <script>
 import Todo from './components/Todos.svelte'
-let todos = [
-  { id: 1, name: 'Create a Svelte starter app', completed: true },
-    { id: 2, name: 'Create your first component', completed: true },
-    { id: 3, name: 'Complete the rest of the tutorial', completed: false }
-]
+let todos = []
 let size = window.innerWidth;
 </script>
 
@@ -12,7 +8,7 @@ let size = window.innerWidth;
 {#if (size <= 500)}
  <Todo {todos}/>
 {:else}
- <h1>Yikes! this site isn't available on Desktop</h1>
+ <h1>Yikes! this site is only available on mobile devices</h1>
  {/if}
 </main>
 
