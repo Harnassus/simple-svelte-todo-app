@@ -158,10 +158,6 @@
         font-weight: bold;
     }
     /* end */
-    .error-message {
-      font-size: 10px;
-      color: red;
-    }
     
     
 </style>
